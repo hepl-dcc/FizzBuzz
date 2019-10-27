@@ -235,3 +235,5 @@ $RECYCLE.BIN/
 
 # End of https://www.gitignore.io/api/node,sass,macos,windows,jetbrains
 /.idea/
+/dist/js/script.min.js
+/mix-manifest.json
