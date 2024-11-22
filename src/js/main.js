@@ -1,42 +1,52 @@
 (function () {
-  "use strict";
-  const FizzBuzz = {
-    cacheDom() {
-      this.app = document.querySelector("#fizzbuzz");
-    },
-    init() {
-      document.documentElement.classList.add('js-enabled');
-      this.iNumberOfElem = 0;
-      this.cacheDom();
-      this.addEventListeners();
-      this.iNumberOfElem = this.generateItems();
-    },
-    generateItem(num) {
-      if (num % 3 === 0 && num % 5 === 0) {
-        this.app.insertAdjacentHTML('beforeend', `<li class="fizzbuzz">FI<i>zz</i>BU<i>zz</i></li>`)
-      } else if (num % 3 === 0) {
-        this.app.insertAdjacentHTML('beforeend', `<li class="fizz">FI<i>zz</li>`);
+    const fizzBuzz = {
+        olElement: document.getElementById('fizzbuzz'),
+        windowHeight: window.innerHeight,
+        start: 1,
+        end: 100,
+        init() {
+            this.gap = this.end;
+            document.documentElement.classList.add('js-enabled');
+            this.generateItemElements();
+            window.addEventListener('scrollend', (event) => {
+                this.generateLiNumberElement();
+            });
+        },
+        toggleSum(event) {
+            [event.currentTarget.dataset.sum, event.currentTarget.textContent] = [event.currentTarget.textContent, event.currentTarget.dataset.sum];
+        },
 
-      } else if (num % 5 === 0) {
-        this.app.insertAdjacentHTML('beforeend', `<li class="buzz">BU<i>zz</li>`);
-      } else {
-        this.app.insertAdjacentHTML('beforeend', `<li class="buzz">${num}</li>`);
-      }
-    },
-    generateItems({ start = 1, maxElem = 100 } = {}) {
-      for (; start <= maxElem; start++) {
-        this.generateItem(start);
-      }
-      return start;
-    },
-    addEventListeners() {
-      document.addEventListener('scroll', () => {
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-          console.log('end of page');
-          this.iNumberOfElem = this.generateItems({ start: this.iNumberOfElem, maxElem: this.iNumberOfElem + 100 });
+        getSum(until) {
+            return (until * (until + 1)) / 2;
+        },
+
+        generateItemElements() {
+            for (; this.start <= this.end; this.start++) {
+                if (this.start % 15 === 0) {
+                    this.olElement.insertAdjacentHTML('beforeend', '<li class="fizzbuzz">FI<i>zz</i>BU<i>zz</i></li>');
+                } else if (this.start % 5 === 0) {
+                    this.olElement.insertAdjacentHTML('beforeend', '<li class="buzz">BU<i>zz</i></li>');
+                } else if (this.start % 3 === 0) {
+                    this.olElement.insertAdjacentHTML('beforeend', ' <li class="fizz">FI<i>zz</i></li>');
+                } else {
+                    const liElement = document.createElement('li');
+                    liElement.textContent = this.start;
+                    liElement.addEventListener('click', this.toggleSum);
+                    liElement.dataset.sum = this.getSum(this.start);
+                    this.olElement.insertAdjacentElement('beforeend', liElement);
+                }
+            }
+            this.end += this.gap;
+        },
+        generateLiNumberElement() {
+            const bodyHeight = document.body.clientHeight;
+            const scroll = window.scrollY;
+            if (scroll + this.windowHeight >= bodyHeight) {
+                this.generateItemElements();
+            }
         }
-      })
-    }
-  };
-  FizzBuzz.init();
+    };
+
+    fizzBuzz.init();
+
 })();
