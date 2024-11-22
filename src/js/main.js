@@ -8,9 +8,7 @@
             this.gap = this.end;
             document.documentElement.classList.add('js-enabled');
             this.generateItemElements();
-            window.addEventListener('scrollend', (event) => {
-                this.generateLiNumberElement();
-            });
+            window.addEventListener('scrollend', this.generateLiNumberElement.bind(this));
         },
         toggleSum(event) {
             [event.currentTarget.dataset.sum, event.currentTarget.textContent] = [event.currentTarget.textContent, event.currentTarget.dataset.sum];
